@@ -85,37 +85,37 @@ export default function PlaceOrderScreen() {
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>
       <Helmet>
-        <title>Preview Order</title>
+        <title>Pregled porudžbine</title>
       </Helmet>
-      <h1 className="my-3">Preview Order</h1>
+      <h1 className="my-3">Pregled porudžbine</h1>
       <Row>
         <Col md={8}>
           <Card className="mb-3">
             <Card.Body>
-              <Card.Title>Shipping</Card.Title>
+              <Card.Title>Dostava</Card.Title>
               <Card.Text>
-                <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
-                <strong>Address: </strong> {cart.shippingAddress.address},
+                <strong>Ime:</strong> {cart.shippingAddress.fullName} <br />
+                <strong>Adresa: </strong> {cart.shippingAddress.address},
                 {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},
                 {cart.shippingAddress.country}
               </Card.Text>
-              <Link to="/shipping">Edit</Link>
+              <Link to="/shipping">Izmeni</Link>
             </Card.Body>
           </Card>
 
           <Card className="mb-3">
             <Card.Body>
-              <Card.Title>Payment</Card.Title>
+              <Card.Title>Plaćanje</Card.Title>
               <Card.Text>
-                <strong>Method:</strong> {cart.paymentMethod}
+                <strong>Način plaćanja:</strong> {cart.paymentMethod}
               </Card.Text>
-              <Link to="/payment">Edit</Link>
+              <Link to="/payment">Izmeni</Link>
             </Card.Body>
           </Card>
 
           <Card className="mb-3">
             <Card.Body>
-              <Card.Title>Items</Card.Title>
+              <Card.Title>Proizvodi</Card.Title>
               <ListGroup variant="flush">
                 {cart.cartItems.map((item) => (
                   <ListGroup.Item key={item._id}>
@@ -136,37 +136,37 @@ export default function PlaceOrderScreen() {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Link to="/cart">Edit</Link>
+              <Link to="/cart">Izmeni</Link>
             </Card.Body>
           </Card>
         </Col>
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>Order Summary</Card.Title>
+              <Card.Title>Pregled porudžbine</Card.Title>
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <Row>
-                    <Col>Items</Col>
+                    <Col>Proizvodi</Col>
                     <Col>${cart.itemsPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    <Col>Shipping</Col>
+                    <Col>Poštarina</Col>
                     <Col>${cart.shippingPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    <Col>Tax</Col>
+                    <Col>PDV</Col>
                     <Col>${cart.taxPrice.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>
-                      <strong> Order Total</strong>
+                      <strong>Ukupno</strong>
                     </Col>
                     <Col>
                       <strong>${cart.totalPrice.toFixed(2)}</strong>
@@ -180,7 +180,7 @@ export default function PlaceOrderScreen() {
                       onClick={placeOrderHandler}
                       disabled={cart.cartItems.length === 0}
                     >
-                      Place Order
+                      Naručite
                     </Button>
                   </div>
                   {loading && <LoadingBox></LoadingBox>}

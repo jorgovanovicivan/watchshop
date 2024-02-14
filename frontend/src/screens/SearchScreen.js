@@ -130,11 +130,11 @@ export default function SearchScreen() {
   return (
     <div>
       <Helmet>
-        <title>Search Products</title>
+        <title>Pretraži proizvode</title>
       </Helmet>
       <Row>
         <Col md={3}>
-          <h3>Department</h3>
+          <h3>Kategorija</h3>
           <div>
             <ul>
               <li>
@@ -142,7 +142,7 @@ export default function SearchScreen() {
                   className={'all' === category ? 'text-bold' : ''}
                   to={getFilterUrl({ category: 'all' })}
                 >
-                  Any
+                 Bilo koja
                 </Link>
               </li>
               {categories.map((c) => (
@@ -158,14 +158,14 @@ export default function SearchScreen() {
             </ul>
           </div>
           <div>
-            <h3>Price</h3>
+            <h3>Cena</h3>
             <ul>
               <li>
                 <Link
                   className={'all' === price ? 'text-bold' : ''}
                   to={getFilterUrl({ price: 'all' })}
                 >
-                  Any
+                 Bilo koja
                 </Link>
               </li>
               {prices.map((p) => (
@@ -181,7 +181,7 @@ export default function SearchScreen() {
             </ul>
           </div>
           <div>
-            <h3>Avg. Customer Review</h3>
+            <h3>Ocena potrošača</h3>
             <ul>
               {ratings.map((r) => (
                 <li key={r.name}>
@@ -233,29 +233,39 @@ export default function SearchScreen() {
                   </div>
                 </Col>
                 <Col className="text-end">
-                  Sort by{' '}
+                  Sortiraj po{' '}
                   <select
                     value={order}
                     onChange={(e) => {
                       navigate(getFilterUrl({ order: e.target.value }));
                     }}
                   >
-                    <option value="newest">Newest Arrivals</option>
-                    <option value="lowest">Price: Low to High</option>
-                    <option value="highest">Price: High to Low</option>
-                    <option value="toprated">Avg. Customer Reviews</option>
+                    <option value="newest">Najnoviji</option>
+                    <option value="lowest">Cena: Od manje ka većoj</option>
+                    <option value="highest">Cena:Od veće ka manjoj</option>
+                    <option value="toprated">Prosečna ocena</option>
                   </select>
                 </Col>
               </Row>
               {products.length === 0 && (
-                <MessageBox>No Product Found</MessageBox>
+                <MessageBox>Sistem ne može da pronađe proizvod po zadatim vrednostima</MessageBox>
               )}
 
               <Row>
                 {products.map((product) => (
                   <Col sm={6} lg={4} className="mb-3" key={product._id}>
                     <Product product={product}></Product>
+                    <Button
+                    
+                      type="button"
+                      variant="outline-success"
+                      onClick={() => navigate(`/admin/product/${product._id}`)}
+                      className='text-center'
+                    >
+                     Izmeni
+                    </Button>
                   </Col>
+                  
                 ))}
               </Row>
 

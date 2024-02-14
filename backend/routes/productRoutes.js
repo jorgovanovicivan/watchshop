@@ -1,17 +1,14 @@
 import express from 'express';
-import Product from '../models/productModel.js';
 import expressAsyncHandler from 'express-async-handler';
+import Product from '../models/productModel.js';
 import { isAuth, isAdmin } from '../utils.js';
+
 const productRouter = express.Router();
 
 productRouter.get('/', async (req, res) => {
   const products = await Product.find();
   res.send(products);
 });
-
-
-const PAGE_SIZE = 3;
-
 
 productRouter.post(
   '/',
@@ -58,6 +55,44 @@ productRouter.put(
     }
   })
 );
+productRouter.put(
+  '/:category',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async(req,res)=>{
+    const category=req.params.category;
+    const updatedProduct=req.body;
+    try {
+      const result = await Product.updateMany(
+        { category: category },
+        { $set: {price:40} }
+      );
+
+      res.status(200).send({ message: `${result.nModified} product(s) updated` });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error updating product(s)' });
+    }
+    
+  })
+);
+productRouter.delete(
+  '/:id',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      await product.remove();
+      res.send({ message: 'Product Deleted' });
+    } else {
+      res.status(404).send({ message: 'Product Not Found' });
+    }
+  })
+);
+
+const PAGE_SIZE = 3;
+
 productRouter.get(
   '/admin',
   isAuth,
@@ -79,6 +114,7 @@ productRouter.get(
     });
   })
 );
+
 productRouter.get(
   '/search',
   expressAsyncHandler(async (req, res) => {
@@ -156,6 +192,7 @@ productRouter.get(
     });
   })
 );
+
 productRouter.get(
   '/categories',
   expressAsyncHandler(async (req, res) => {
@@ -163,13 +200,12 @@ productRouter.get(
     res.send(categories);
   })
 );
-productRouter.get("/slug/:slug", async (req, res) => {
-  const product = await Product.findOne({ slug: { $eq: req.params.slug } });
-
+productRouter.get('/slug/:slug', async (req, res) => {
+  const product = await Product.findOne({ slug: req.params.slug });
   if (product) {
     res.send(product);
   } else {
-    res.status(404).send({ message: "Product not found" });
+    res.status(404).send({ message: 'Product Not Found' });
   }
 });
 productRouter.get('/:id', async (req, res) => {
@@ -180,5 +216,21 @@ productRouter.get('/:id', async (req, res) => {
     res.status(404).send({ message: 'Product Not Found' });
   }
 });
+// productRouter.post('/:id/stock', async (req, res) => {
+//   const { id } = req.params;
+//   const { countInStock } = req.body;
 
+//   // čuvanje stanja količine proizvoda u nekom objektu
+//   stockData[id] = countInStock;
+
+//   res.send({ message: 'Stock updated successfully' });
+// });
+// productRouter.get('/:id/stock', async (req, res) => {
+//   const { id } = req.params;
+
+//   // čitanje stanja količine proizvoda iz objekta
+//   const countInStock = stockData[id] || 0;
+
+//   res.send({ countInStock });
+// });
 export default productRouter;

@@ -26,11 +26,13 @@ import axios from 'axios';
 import SearchBox from './components/SearchBox';
 import SearchScreen from './screens/SearchScreen';
 import ProtectedRoute from './components/ProtectedRoute';
-import DashboardScreen from './screens/DashboardScreen';
+import UpdateScreen from './screens/UpdateScreen';
 import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
-
+import OrderListScreen from './screens/OrderListScreen';
+import UserEditScreen from './screens/UserEditScreen';
+import UpdateScreenCategory from './screens/UpdateScreenCategory';
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
@@ -77,7 +79,7 @@ function App() {
               </Button>
 
               <LinkContainer to="/">
-                <Navbar.Brand>amazona</Navbar.Brand>
+                <Navbar.Brand>watchshop</Navbar.Brand>
               </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
@@ -115,16 +117,16 @@ function App() {
                   )}
                   {userInfo && userInfo.isAdmin && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/admin/dashboard">
-                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                      <LinkContainer to="/admin/products/categories">
+                        <NavDropdown.Item>Update</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/orders">
+                      <LinkContainer to="/orderhistory">
                         <NavDropdown.Item>Orders</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/users">
+                      <LinkContainer to="admin/users">
                         <NavDropdown.Item>Users</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
@@ -196,14 +198,28 @@ function App() {
               ></Route>
               <Route path="/payment" element={<PaymentMethodScreen />}></Route>
               {/* Admin Routes */}
-              {/* <Route
-                path="/admin/dashboard"
+              <Route
+                path="/admin/products/categories"
                 element={
                   <AdminRoute>
-                    <DashboardScreen />
+                    <UpdateScreen />
                   </AdminRoute>
                 }
-              ></Route> */}
+              ></Route>
+              <Route exact path="admin/products/category/:category" element={
+                  <AdminRoute>
+                    <UpdateScreenCategory />
+                  </AdminRoute>
+                }>
+                </Route>
+              <Route
+                path="/admin/orders"
+                element={
+                  <AdminRoute>
+                    <OrderListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
               <Route
                 path="/admin/products"
                 element={
@@ -212,14 +228,26 @@ function App() {
                   </AdminRoute>
                 }
               ></Route>
- <Route
+              <Route
                 path="/admin/product/:id"
                 element={
                   <AdminRoute>
                     <ProductEditScreen />
                   </AdminRoute>
                 }
+
               ></Route>
+              <Route path="admin/products/category/:category"
+                element={
+                <AdminRoute>
+                  <UpdateScreenCategory/></AdminRoute>}
+
+            >  </Route>
+<Route path='admin/users'   element={
+                  <AdminRoute>
+                    <UserEditScreen />
+                  </AdminRoute>
+                }></Route>
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>

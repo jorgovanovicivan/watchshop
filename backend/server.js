@@ -6,6 +6,9 @@ import seedRouter from './routes/seedRoutes.js';
 import productRouter from './routes/productRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
+import uploadRouter from './routes/uploadRoutes.js';
+
+
 
 dotenv.config();
 
@@ -21,7 +24,11 @@ mongoose
   
   const app = express();
   app.use(express.json());
+  app.get('/api/keys/paypal', (req,res)=>{
+    res.send(process.env.PAYPAL_CLIENT_ID || 'sb'); //send box
+  });
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/upload', uploadRouter);
 app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users',userRouter);
@@ -30,6 +37,21 @@ app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
 });//middleware error expressAsyncHandler
 
+// app.get('/cart', (req, res) => {
+//   // čitanje vrednosti iz sesije
+//   const count = req.session.count || 0;
+//   // ažuriranje vrednosti u sesiji
+//   req.session.count = count + 1;
+//   // slanje odgovora klijentu
+//   res.send(`Broj poseta: ${count}`);
+// });
+
+// app.use(session({
+//   secret: 'mysecretkey',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { secure: false }
+// }));
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`serve at http://localhost:${port}`);
