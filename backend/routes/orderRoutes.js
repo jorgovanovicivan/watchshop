@@ -33,7 +33,7 @@ orderRouter.post(
     });
 
     const order = await newOrder.save();
-    res.status(201).send({ message: 'New Order Created', order });
+    res.status(201).send({ message: 'Sistem je kreirao novu porudzbinu', order });
   })
 );
 

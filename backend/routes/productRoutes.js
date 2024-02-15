@@ -39,6 +39,7 @@ productRouter.put(
   expressAsyncHandler(async (req, res) => {
     const productId = req.params.id;
     const product = await Product.findById(productId);
+   
     if (product) {
       product.name = req.body.name;
       product.slug = req.body.slug;

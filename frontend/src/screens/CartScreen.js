@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect, useReducer} from 'react';
 import { Store } from '../Store';
 import { Helmet } from 'react-helmet-async';
 import Row from 'react-bootstrap/Row';
@@ -11,11 +11,86 @@ import { Link,  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function CartScreen() {
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'FETCH_REQUEST':
+        return { ...state, loading: true };
+      case 'FETCH_SUCCESS':
+        return { ...state, loading: false };
+      case 'FETCH_FAIL':
+        return { ...state, loading: false, error: action.payload };
+      case 'UPDATE_REQUEST':
+        return { ...state, loadingUpdate: true };
+      case 'UPDATE_SUCCESS':
+        return { ...state, loadingUpdate: false };
+      case 'UPDATE_FAIL':
+        return { ...state, loadingUpdate: false };
+      case 'UPLOAD_REQUEST':
+        return { ...state, loadingUpload: true, errorUpload: '' };
+      case 'UPLOAD_SUCCESS':
+        return {
+          ...state,
+          loadingUpload: false,
+          errorUpload: '',
+        };
+      case 'UPLOAD_FAIL':
+        return { ...state, loadingUpload: false, errorUpload: action.payload };
+  
+      default:
+        return state;
+    }
+  };
   const navigate=useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
+  const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
+  useReducer(reducer, {
+    loading: true,
+    error: '',
+  });
+  const [name, setName] = useState('');
+  const [slug, setSlug] = useState('');
+  const [price, setPrice] = useState('');
+  const [image, setImage] = useState('');
+  const [category, setCategory] = useState('');
+  const [countInStock, setCountInStock] = useState('');
+  const [brand, setBrand] = useState('');
+  const [description, setDescription] = useState('');
+  const { userInfo } = state;
+
+  const submitHandler = async (productID,countStock) => {
+    // e.preventDefault();
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.put(
+          `/api/products/${productID}`,
+          {
+            _id: productID,
+            name,
+          slug,
+          price,
+          image,
+          category,
+          brand,
+          countInStock:countStock,
+          description,
+          
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+       
+      } catch (err) {
+        console.log("Error update : ", err)
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+    };
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
@@ -28,6 +103,15 @@ export default function CartScreen() {
     });
   };
   const removeItemHandler = (item) => {
+    // if(item.countInStock>1){
+
+    //   ctxDispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    // }else{
+    //   ctxDispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    //   item.countInStock = 1;
+    //   submitHandler(item._id, item.countInStock );
+    //   console.log("Remove from cart item.count:",item.countInStock);
+    // }
     ctxDispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
 
